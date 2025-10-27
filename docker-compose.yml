@@ -28,8 +28,8 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=odoo
-      - DB_PASSWORD=odoo
-      - DB_NAME=postgres
+      - DB_PASSWORD=Hola123_
+      - DB_NAME=odoo_db
 #Definimos el servicio de la base de datos
   db:
     image: postgres:15
