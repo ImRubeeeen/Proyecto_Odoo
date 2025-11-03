@@ -4,7 +4,8 @@
 PerenxisaTecnо2025
 
 - patocomponentes@odooserra.work.gd
-apptorrent@odooserra.work.gd
+
+- apptorrent@odooserra.work.gd
 
 - Entrante: imap.qboxmail.com
 IMAP: 993
