@@ -51,12 +51,12 @@ Este comando descarga la clave GPG de Odoo, la convierte a formato binario y la 
 
 Parametros:
 
-"wget": herramienta para descargar archivos desde la web.
-"-q": ejecuta en modo silencioso, sin mostrar progreso ni mensajes innecesarios.
-"-O": redirige la salida a la terminal, en lugar de guardar el archivo en disco.
-"gpg": GNU Privacy Guard, usado para manejar claves de cifrado y firmas.
-"--deamor": convierte la clave descargada del formato ASCII-armored (texto) a formato binario que entiende APT (el gestor de paquetes de Ubuntu/Debian).
-"-o": guarda el resultado en el archivo.
+- "wget": herramienta para descargar archivos desde la web.
+- "-q": ejecuta en modo silencioso, sin mostrar progreso ni mensajes innecesarios.
+- "-O": redirige la salida a la terminal, en lugar de guardar el archivo en disco.
+- "gpg": GNU Privacy Guard, usado para manejar claves de cifrado y firmas.
+- "--deamor": convierte la clave descargada del formato ASCII-armored (texto) a formato binario que entiende APT (el gestor de paquetes de Ubuntu/Debian).
+- "-o": guarda el resultado en el archivo.
 
 ```shell
 echo 'deb [signed-by=/usr/share/keyrings/odoo-archive-keyring.gpg] https://nightly.odoo.com/18.0/nightly/deb/ ./' | sudo tee /etc/apt/sources.list.d/odoo.list
@@ -205,8 +205,7 @@ sudo chmod -R 777 /home/usuario/OdooDesarrollo/volumesOdoo/addons
 ```
 ## 3.3 - Instalar Odoo con docker-compose
 
-Creamos en el directorio que queremos que se instale el Odoo el fichero "docker-compose.yml". Con esto lo que hacemos es lo mismo que en el apartado anterior,
-pero en vez de hacerlo comando a comando, lo hacemos con un fichero que se encargará de crear todo.
+Creamos en el directorio que queremos que se instale el Odoo el fichero "docker-compose.yml". Con esto lo que hacemos es lo mismo que en el apartado anterior, pero en vez de hacerlo comando a comando, lo hacemos con un fichero que se encargará de hacer todo como si pusiesemos los comandos usados anteriormente.
 
 ```yml
 version: '3.3'
