@@ -38,7 +38,7 @@ Si tenemos más de 1 rama, tenemos que hacer lo siguiente:
 
 - git add ruta
 - git commit -m "Comentario"
-  - git remote add origin nuestro repositorio que queremos usar
+- git remote add origin nuestro repositorio que queremos usar
 - git remote -v
 - git fetch --all
 - git checkout la rama donde lo tengas
