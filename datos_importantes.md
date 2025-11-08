@@ -49,7 +49,7 @@ En el caso de que no quereamos reemplazar nada y subir más ficheros/directorios
 - git add directorio/s
 - git commit -m "comentario"
 - git status
-- git pull --rebase origin main (en el caso que ya tengas commits locales que quieres conservar y el repositorio remoto también cambió desde tu último pull)
+  - git pull --rebase origin main (en el caso que ya tengas commits locales que quieres conservar y el repositorio remoto también cambió desde tu último pull)
   - git fetch origin y git reset --hard origin/main (úsalo cuando NO quieres conservar tus cambios locales y quieres dejar tu carpeta idéntica a lo que hay en GitHub (se recomienda cuando: Estás empezando desde cero con el git init, quieres descartar errores o limpiar tu entorno local, estás configurando una nueva máquina o entorno, o tu repositorio local se ha “roto” y quieres “bajarlo limpio”))
 - git push origin main
 
