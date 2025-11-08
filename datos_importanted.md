@@ -23,7 +23,6 @@ Seguridad SSL/TLS
 
 - tar -cvzf nombre.tar volumesOdoo/ (en nuestro caso hacemos un tar para subirlo a github)
 - tar cvf micomprimido.tar.xz -I 'xz -9' directorio que queremos comprimir (es para comprimirlo aún más)
-- tar xvf micomprimido.tar (para descomprimirlo)
 - git add ruta (puedes usar el punto si quieres subir todo del directorio donde estás) / git add . (sube todo lo que tengas en el directorio en el que estés)
 - git status (comprobar lo que se ha subido)
 - git commit -m "Comentario"
@@ -52,6 +51,7 @@ En el caso de que no quereamos reemplazar nada y subir un fichero o lo que sea, 
 Si queremos descargar lo que tenemos subido:
 
 - git clone https://github.com/ImRubeeeen/Proyecto_Odoo.git (al ser un perfil y repositorio público no pide ningún tipo de credencial)
+- tar xvf micomprimido.tar (para descomprimirlo)
 
 # 3. Credenciales base de datos Odoo
 
