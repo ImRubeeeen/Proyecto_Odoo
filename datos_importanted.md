@@ -44,10 +44,10 @@ Si tenemos más de 1 rama, tenemos que hacer lo siguiente:
 - git checkout la rama donde lo tengas
 - git push -u origin main
 
-En el caso de que no quereamos reemplazar nada y subir un fichero o lo que sea, hay que hacer lo siguiente:
+En el caso de que no quereamos reemplazar nada y subir más ficheros/directorios, hay que hacer lo siguiente:
 
 - git pull --rebase origin main (sin añadir cambios antes, es decir, NO HACER ningun "git add")
-- git add docker-compose.yml (ahora si que añades lo que quieras subir)
+- git add directorio/fichero (ahora si que añades lo que quieras subir)
 - git status
 - git commit -m "Añadido el docker compose"
 - git push origin main
