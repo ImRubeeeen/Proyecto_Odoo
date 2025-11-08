@@ -23,8 +23,8 @@ Seguridad SSL/TLS
 
 - tar -cvzf nombre.tar volumesOdoo/ (en nuestro caso hacemos un tar para subirlo a github)
 - tar cvf micomprimido.tar.xz -I 'xz -9' directorio que queremos comprimir (es para comprimirlo aún más)
+- git config --global init.defaultBranch main (se usa para que cuando hagas el git init se cree la rama automáticamente con el nombre de "main) 
 - git init (en el directorio donde se encuentre lo que quieres subir, esto hace que puedas empezar a usar el git)
-- git branch -m main
 - git branch --show-current (comprobación para ver en que rama te encuentras, en este caso, lo uso para poder ver que se ha modificado correctamente el nombre)
 - git config --global --add safe.directory directorio (hay veces que te lo va a pedir por seguridad, es simplemente para añadir el directorio que le digas como fichero seguro)
 - git add ruta (prepara el estado de subida) / git add . (sube todo lo que tengas en el directorio en el que estés)
