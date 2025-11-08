@@ -23,6 +23,7 @@ Seguridad SSL/TLS
 
 - tar -cvzf nombre.tar volumesOdoo/ (en nuestro caso hacemos un tar para subirlo a github)
 - tar cvf micomprimido.tar.xz -I 'xz -9' directorio que queremos comprimir (es para comprimirlo aún más)
+- git init (en el directorio donde se encuentre lo que quieres subir)
 - git add ruta (puedes usar el punto si quieres subir todo del directorio donde estás) / git add . (sube todo lo que tengas en el directorio en el que estés)
 - git status (comprobar lo que se ha subido)
 - git commit -m "Comentario"
