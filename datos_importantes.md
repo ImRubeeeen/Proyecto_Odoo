@@ -46,10 +46,11 @@ Si tenemos más de 1 rama, tenemos que hacer lo siguiente:
 
 En el caso de que no quereamos reemplazar nada y subir más ficheros/directorios, hay que hacer lo siguiente:
 
-- git pull --rebase origin main (sin añadir cambios antes, es decir, NO HACER ningun "git add")
-- git add directorio/fichero (ahora si que añades lo que quieras subir)
+- git add directorio/s
+- git commit -m "comentario"
 - git status
-- git commit -m "Añadido el docker compose"
+- git pull --rebase origin main (en el caso que ya tengas commits locales que quieres conservar y el repositorio remoto también cambió desde tu último pull)
+  - git fetch origin y git reset --hard origin/main (úsalo cuando NO quieres conservar tus cambios locales y quieres dejar tu carpeta idéntica a lo que hay en GitHub (se recomienda cuando: Estás empezando desde cero con el git init, quieres descartar errores o limpiar tu entorno local, estás configurando una nueva máquina o entorno, o tu repositorio local se ha “roto” y quieres “bajarlo limpio”))
 - git push origin main
 
 Si queremos descargar lo que tenemos subido:
