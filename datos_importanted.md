@@ -25,9 +25,11 @@ Seguridad SSL/TLS
 - tar cvf micomprimido.tar.xz -I 'xz -9' directorio que queremos comprimir (es para comprimirlo aún más)
 - git init (en el directorio donde se encuentre lo que quieres subir, esto hace que puedas empezar a usar el git)
 - git branch -m main
-- git add ruta (puedes usar el punto si quieres subir todo del directorio donde estás) / git add . (sube todo lo que tengas en el directorio en el que estés)
+- git branch --show-current (comprobación para ver en que rama te encuentras, en este caso, lo uso para poder ver que se ha modificado correctamente el nombre)
+- git config --global --add safe.directory directorio (hay veces que te lo va a pedir por seguridad, es simplemente para añadir el directorio que le digas como fichero seguro)
+- git add ruta (prepara el estado de subida) / git add . (sube todo lo que tengas en el directorio en el que estés)
 - git status (comprobar lo que se ha subido)
-- git commit -m "Comentario"
+- git commit -m "Comentario" (si no has configurado tu usuario y correo de github, te pedirá que lo hagas, pones los 2 comandos que te salen y ya)
 - git remote add origin https://github.com/ImRubeeeen/Proyecto_Odoo (Añadir el repositorio que queremos)
 - git remote -v (comprueba que se vea el repositorio remoto)
 - git push -u origin main (indicas que a partir de ahora la rama donde vas a subir las cosas es el main y también lo subes / para poder subirlo, pedirá por seguridad el usuario y en el apartado de la contraseña hay que poner el token que hayas generado desde github)
