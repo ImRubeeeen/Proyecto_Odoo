@@ -30,7 +30,7 @@ Seguridad SSL/TLS
 - git add ruta (prepara el estado de subida) / git add . (sube todo lo que tengas en el directorio en el que estés)
 - git status (comprobar lo que se ha subido)
 - git commit -m "Comentario" (si no has configurado tu usuario y correo de github, te pedirá que lo hagas, pones los 2 comandos que te salen y ya)
-- git remote add origin https://github.com/ImRubeeeen/Proyecto_Odoo (Añadir el repositorio que queremos)
+- git remote add origin nuestro repositorio que queremos usar
 - git remote -v (comprueba que se vea el repositorio remoto)
 - git push -u origin main (indicas que a partir de ahora la rama donde vas a subir las cosas es el main y también lo subes / para poder subirlo, pedirá por seguridad el usuario y en el apartado de la contraseña hay que poner el token que hayas generado desde github)
 
@@ -38,7 +38,7 @@ Si tenemos más de 1 rama, tenemos que hacer lo siguiente:
 
 - git add ruta
 - git commit -m "Comentario"
-- git remote add origin https://github.com/ImRubeeeen/Proyecto_Odoo (Añadir el repositorio que queremos)
+  - git remote add origin nuestro repositorio que queremos usar
 - git remote -v
 - git fetch --all
 - git checkout la rama donde lo tengas
