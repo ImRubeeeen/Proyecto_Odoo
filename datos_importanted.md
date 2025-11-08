@@ -54,7 +54,7 @@ En el caso de que no quereamos reemplazar nada y subir más ficheros/directorios
 
 Si queremos descargar lo que tenemos subido:
 
-- git clone https://github.com/ImRubeeeen/Proyecto_Odoo.git (al ser un perfil y repositorio público no pide ningún tipo de credencial)
+- git clone repositorio que quieres descargar (si es un repositorio público, no pedirá crendenciales)
 - tar xvf micomprimido.tar (para descomprimirlo)
 
 # 3. Credenciales base de datos Odoo
