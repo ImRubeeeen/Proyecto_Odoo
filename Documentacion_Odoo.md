@@ -257,3 +257,51 @@ services:
 
 - Para instalar/iniciar el docker-compose, usamos el siguiente comando: docker compose up -d (el -d se utiliza para que se quede en segundo plano)
 - Para detener el docker-compose se usa: docker compose down (se recomienda antes de apagar la máquina el docker compose)
+
+# 4. Personalización de plantillas de correo y su automatizaciones en Odoo
+
+## 4.1 - Activar modo desarrollador
+
+Antes de nada, hay que activar el modo desarrollador. Con esto puedes obtener todas las herramientas que no se pueden ver si no está activado. Como por ejemplo:
+
+- Parámetros del sistema
+- Alias de correo
+- Modelos de datos
+- Secuencias de documentos
+
+Ve a `Ajustes → Acerca de Odoo → Activar modo desarrollador`.
+
+## 4.2 - Personalización de las plantillas
+
+Ahora podemos crear la plantilla de correo eléctronico en `Ajustes → Técnico → Correo electrónico → Plantillas de correo electrónico`.
+
+Tenemos varios campos que personalizar aquí:
+
+- Nombre: Aquí pondremos el nombre de nuestra plantilla.
+- Aplica a: Destino al que hace referencia la plantilla.
+- Asunto: Proporciona un adelanto sobre el contenido del mensaje sin necesidad de abrirlo (típico de un email).
+- Contenido: Todo lo que quieres que contenga el correo.
+
+En mi caso he puesto lo siguiente:
+
+- Nombre: [CUSTOM] Correo electrónico automático
+- Aplica a: Pedido de venta
+- Asunto: Gracias por tu pedido {{object.name}}
+- Contenido: 
+
+´´´
+Hola, ¡`object.partner.id`!
+
+¡Tu pedido ha sido confirmado!
+
+Gracias por tu compra. Adjuntamos la confirmación de tu pedido `object.name` para tu revisión.
+
+Recuerda que tienes que pagar `object.amount.total`€.
+
+Procederemos con el procesamiento y envío de tu pedido. 
+
+Te mantendremos informado sobre el estado de la entrega. 
+
+Saludos cordiales, `object.company_id.name`.
+´´´
+
