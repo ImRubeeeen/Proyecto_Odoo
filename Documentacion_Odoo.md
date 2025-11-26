@@ -289,7 +289,7 @@ En mi caso he puesto lo siguiente:
 - Asunto: Gracias por tu pedido {{object.name}}
 - Contenido: 
 
-´´´
+```
 Hola, ¡`object.partner.id`!
 
 ¡Tu pedido ha sido confirmado!
@@ -303,5 +303,5 @@ Procederemos con el procesamiento y envío de tu pedido. 
 Te mantendremos informado sobre el estado de la entrega. 
 
 Saludos cordiales, `object.company_id.name`.
-´´´
+```
 
