@@ -290,18 +290,34 @@ En mi caso he puesto lo siguiente:
 - Contenido: 
 
 ```
-Hola, ¡`object.partner.id`!
+Hola, '¡object.partner.id'!
 
 ¡Tu pedido ha sido confirmado!
 
-Gracias por tu compra. Adjuntamos la confirmación de tu pedido `object.name` para tu revisión.
+Gracias por tu compra. Adjuntamos la confirmación de tu pedido 'object.name' para tu revisión.
 
-Recuerda que tienes que pagar `object.amount.total`€.
+Recuerda que tienes que pagar 'object.amount.total'€.
 
 Procederemos con el procesamiento y envío de tu pedido. 
 
 Te mantendremos informado sobre el estado de la entrega. 
 
-Saludos cordiales, `object.company_id.name`.
+Saludos cordiales, 'object.company_id.name'.
 ```
 
+## 4.3 - Automatización del correo automático del pedido de ventas
+
+Ahora que ya hemos creado la plantilla, podemos empezar a hacer la automátización que cuando confirme una venta envie el correo eléctronico.
+
+Necesitamos antes de nada instalar el modulo llamado "Reglas de automatización", cuando lo tengamos, seguimos los siguientes pasos:
+
+`Ajustes → Técnico → Automatización → Reglas de automatización`.
+
+Cuando estamos dentro de las reglas de automatización, para crear uno tendremos que darle a "Nuevo".
+
+[CUSTOM] Envio mail venta automática
+Modelo: Pedido de venta
+Activador: El estado está establecido como Pedido de venta
+Acciones pendientes > Añadir una acción > Tipo (Enviar correo electrónico) > Detalles de la acción (Plantilla de correo electrónico > Enviar correo electrónico como Mensaje)
+
+Creamos una venta, la confirmamos y debería de salir el mensaje automáticamente al confirmarlo.
