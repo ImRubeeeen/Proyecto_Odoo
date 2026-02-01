@@ -321,3 +321,275 @@ Activador: El estado está establecido como Pedido de venta
 Acciones pendientes > Añadir una acción > Tipo (Enviar correo electrónico) > Detalles de la acción (Plantilla de correo electrónico > Enviar correo electrónico como Mensaje)
 
 Creamos una venta, la confirmamos y debería de salir el mensaje automáticamente al confirmarlo.
+
+## 6. Modulos personalizados de Odoo
+
+### 6.1 - Creación de los directorios y ficheros
+
+Los modulos se hacen en ``/home/user/TecnoFix/volumesOdoo/addons`` (en mi caso, todo depende de donde tengas todo lo de Odoo. 
+
+Sabiendo esto, creamos el primer modelo. Tenemos que crear un directorio dentro de ``addons``.
+
+```bash
+/home/user/TecnoFix/volumesOdoo/addons/prueba
+```
+
+Ahora creamos los ficheros ``__init__.py`` y ``__manifest__.py`` y añadimos las siguientes lineas a ``__manifest__.py``:
+
+```bash
+{
+    'name': "Prueba",
+    'author':"TecnoFix"
+}
+```
+
+### 6.2 - Conexión al contenedor y generación del modulo automático
+
+Acceso al contenedor:
+
+```bash
+docker exec -it odoo-web bash
+```
+
+Generación del modulo automático:
+
+```bash
+odoo scaffold prueba /mnt/extra-addons
+```
+
+### 6.3 - Configuración y personalización del modulo
+
+Personalizar el .py de models:
+
+```py
+# -*- coding: utf-8 -*-
+
+from odoo import models, fields, api
+
+class prueba(models.Model):
+    _name = 'prueba.fruta'
+    _description = 'Modelo para la fruta'
+    _rec_name = 'nombre'            #Para que busque la nueva variable que sustituirá name
+
+    nombre = fields.Char()          #sera caractares
+    tipo = fields.Selection([
+    ('tipo_hueso','Hueso'),
+    ('tipo_citrico','Citrico')
+    ], string = 'Tipo de fruta')    #Campo de selecciones con sus campos
+    peso = fields.Integer(string='Peso')    #Peso como numero entero
+    peso_total = fields.Integer(string='Peso Total',compute='_compute_peso_total') #Peso_total como un decimal ademas del uso de 'compute' para definir que sera modificada por una api
+
+    @api.depends('peso')
+    def _compute_peso_total(self):
+        for registro in self:
+            registro.peso_total = registro.peso * 10
+```
+
+Personalizar el xml de vistas:
+
+```xml
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="fruta_list">
+      <field name="name">Lista de frutas</field>
+      <field name="model">prueba.fruta</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="nombre"/>
+          <field name="tipo"/>
+          <field name="peso"/>
+          <field name="peso_total"/>
+        </list>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="fruta_action_window">
+      <field name="name">Lista de frutas</field>
+      <field name="res_model">prueba.fruta</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Top menu item -->
+
+    <menuitem name="prueba" id="prueba_menu"/>
+
+    <!-- menu categories -->
+
+    <menuitem name="Frutas" id="prueba_fruta" parent="prueba_menu"/>
+
+
+    <!-- actions -->
+
+    <menuitem name="Ver Frutas" id="prueba_menu_ver_fruta" parent="prueba_fruta"
+              action="fruta_action_window"/>
+
+  </data>
+</odoo>
+```
+
+### 6.4 - Instalación del modulo personalizado en Odoo
+
+Para instalarlo debemos acceder a odoo desde la página:
+
+1. Ir a aplicaciones
+2. Pulsar ``Actualizar lista de aplicaciones``
+3. Luego buscar el modulo que hemos personalizado borrando los filtros existentes y buscando por el nombre que le establecimos (Prueba)
+4. Activamos y listo ya podriamos ver Pruebas en la lista de modulos de odoo que esta a la izquierda
+
+### 6.5 - Prácticas
+
+**MÓDULO PARA TIENDA DE VIDEOJUEGOS - REQUISITOS:**
+
+1. Modelo
+    - Nombre (Char): Título del juego.
+    - Consola (Selection): Opciones entre 'PS5', 'Xbox', 'Switch', 'PC'.
+    - Precio Base (Float): El precio sin impuestos (ej. 50.0).
+    - Unidades (Integer): Cuántos juegos hay en stock.
+    - Estado (Selection): 'Nuevo' o 'Segunda Mano'.
+    - Descuento (Boolean): Un check para decidir si se aplica rebaja.
+2. Campos Calculados
+    - Campo 1:
+        - Campo: valor_stock (Float).
+        - Lógica: Multiplicar precio_base * unidades.
+    - Campo 2:
+        - Campo: precio_final (Float).
+        - Lógica:
+            - Si el check de descuento está marcado, el precio final es el
+            precio_base menos 10 euros.
+            - Si no está marcado, el precio final es igual al precio_base.
+            - Ademas he agregado un 21% al precio final
+
+#### 6.5.1 - Directorios y archivos para Modulos personalizados
+
+Para empezar todos los modulos se hacen en `/home/user/docker/Odoo/volumesOdoo/addons`
+
+Ahora crearemos el directorio del Modelo "tienda_videojuegos"
+```bash
+mkdir /home/user/TecnoFix/volumesOdoo/addons/tienda_videojuegos
+```
+
+Luego creamos los ficheros `__init__.py` y `__manifest__.py` de los cuales agregaresmos lo siguiente a `__manifest__.py`
+```
+{
+    'name': "Tienda videojuegos",
+    'author':"TecnoFix"
+}
+```
+
+##### Acceso al contenedor y creación de la plantilla del modulo
+
+Accedemos al contenedor con lo siguiente:
+```bash
+docker exec -it odoo-web bash
+```
+Generamos la plantilla del modulo personalizado
+```bash
+odoo scaffold tienda_videojuegos /mnt/extra-addons
+```
+
+##### Configuración y personalización del modulo
+
+Primero descomentamos la linea `security/ir.model.access.csv` del fichero `__manifest__.py` quedaria de la siguiente manera:
+```py
+    'data': [
+        'security/ir.model.access.csv',
+        'views/views.xml',
+        'views/templates.xml',
+    ],
+```
+Modificar el csv de seguridad
+
+**RUTA:** /addons/tienda_videojuegos/security/ir.model.access.csv
+```csv
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+tienda_videojuegos_acl,tienda_videojuegos,model_tienda_videojuegos_tienda_videojuegos,base.group_user,1,1,1,1
+```
+
+Personalizar el python de models
+
+**Ruta:** volumesOdoo/addons/tienda_videojuegos/models/models.py
+```py
+# -*- coding: utf-8 -*-
+
+from odoo import models, fields, api
+
+
+class tienda_videojuegos(models.Model):
+    _name = 'tienda_videojuegos.tienda_videojuegos'
+    _description = 'tienda_videojuegos.tienda_videojuegos'
+    _rec_name = 'nombre'
+
+    nombre = fields.Char(string="Nombre del Juego", required=True)
+    consola = fields.Selection([('ps5','PS5'),('xbox','XBOX'),('switch','SWITCH'),('pc','PC')])
+    precio_base = fields.Float()
+    unidades = fields.Integer()
+    estado = fields.Selection([('nuevo','Nuevo'),('usado','Segunda Mano')])
+    descuento = fields.Boolean ()
+    valor_stock = fields.Float(compute="_stock_total", store=True)
+    precio_final = fields.Float(compute="_precio_total", store=True)
+
+    @api.depends('precio_base','unidades')
+    def _stock_total(self):
+        for record in self:
+            record.valor_stock = float(record.precio_base) * int(record.unidades)
+
+    @api.depends('precio_base','descuento')
+    def _precio_total(self):
+        for record in self:
+            if record.descuento:
+                record.precio_final = float(record.precio_base) * 1.21 - 10
+            else:
+                record.precio_final = float(record.precio_base) * 1.21
+```
+
+Personalizar el xml de vistas
+**RUTA:** volumesOdoo/addons/tienda_videojuegos/views/views.xml
+```xml
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="tienda_videojuegos_list">
+      <field name="name">Tienda_videojuegos list</field>
+      <field name="model">tienda_videojuegos.tienda_videojuegos</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name = "nombre"/>
+          <field name = "consola"/>
+          <field name = "precio_base"/>
+          <field name = "unidades"/>
+          <field name = "estado"/>
+          <field name = "descuento"/>
+          <field name = "valor_stock"/>
+          <field name = "precio_final"/>
+        </list>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="tienda_videojuegos_action_window">
+      <field name="name">Tienda de videojuegos</field>
+      <field name="res_model">tienda_videojuegos.tienda_videojuegos</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+        <!-- Top menu item -->
+    <menuitem name="Gestión de videojuegos" id="tienda_videojuegos_menu"/>
+
+    <!-- menu categories -->
+    <menuitem name="Ver juegos" id="tienda_videojuegos_tienda_videojuegos" parent="tienda_videojuegos_menu"/>
+
+    <!-- actions -->
+    <menuitem name="Listar juegos" id="tienda_videojuegos_listar_videojuegos" parent="tienda_videojuegos_tienda_videojuegos"
+              action="tienda_videojuegos_action_window"/>
+```
+
+##### Instalación del modulo personalizado en Odoo
+Para instalarlo debemos acceder a [odoo](localhost:8069) desde la página 
+1. ir a aplicaciones 
+2. pulsar `Actualizar lista de aplicaciones` 
+3. luego buscar el modulo que hemos personalizado borrando los filtros existentes y buscando por el nombre que le establecimos (Tienda videojuegos) 
+4. activamos y listo ya podriamos ver Gestión de videojuegos en la lista de modulos de odoo que esta a la izquierda
