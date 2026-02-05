@@ -277,7 +277,7 @@ Ahora podemos crear la plantilla de correo eléctronico en `Ajustes → Técnico
 
 Tenemos varios campos que personalizar aquí:
 
-- Nombre: Aquí pondremos el nombre de nuestra plantilla.
+- Nombre: Aquí pondremos el nombre que queramos para la plantilla.
 - Aplica a: Destino al que hace referencia la plantilla.
 - Asunto: Proporciona un adelanto sobre el contenido del mensaje sin necesidad de abrirlo (típico de un email).
 - Contenido: Todo lo que quieres que contenga el correo.
@@ -287,23 +287,25 @@ En mi caso he puesto lo siguiente:
 - Nombre: [CUSTOM] Correo electrónico automático
 - Aplica a: Pedido de venta
 - Asunto: Gracias por tu pedido {{object.name}}
-- Contenido: 
+- Contenido:
 
-```
-Hola, '¡object.partner.id'!
+    ```
+    Hola, '¡object.partner.id'!
+    
+    ¡Tu pedido ha sido confirmado!
+    
+    Gracias por tu compra. Adjuntamos la confirmación de tu pedido 'object.name' para tu revisión.
+    
+    Recuerda que tienes que pagar 'object.amount.total'€.
+    
+    Procederemos con el procesamiento y envío de tu pedido. 
+    
+    Te mantendremos informado sobre el estado de la entrega. 
+    
+    Saludos cordiales, 'object.company_id.name'.
+    ```
 
-¡Tu pedido ha sido confirmado!
-
-Gracias por tu compra. Adjuntamos la confirmación de tu pedido 'object.name' para tu revisión.
-
-Recuerda que tienes que pagar 'object.amount.total'€.
-
-Procederemos con el procesamiento y envío de tu pedido. 
-
-Te mantendremos informado sobre el estado de la entrega. 
-
-Saludos cordiales, 'object.company_id.name'.
-```
+Para poner los ``object`` en el contenido tienes que usar la ``/`` y dentro hay que usar ``Marcador de posición dinámico``.
 
 ## 4.3 - Automatización del correo automático del pedido de ventas
 
@@ -315,23 +317,87 @@ Necesitamos antes de nada instalar el modulo llamado "Reglas de automatización"
 
 Cuando estamos dentro de las reglas de automatización, para crear uno tendremos que darle a "Nuevo".
 
-[CUSTOM] Envio mail venta automática
-Modelo: Pedido de venta
-Activador: El estado está establecido como Pedido de venta
-Acciones pendientes > Añadir una acción > Tipo (Enviar correo electrónico) > Detalles de la acción (Plantilla de correo electrónico > Enviar correo electrónico como Mensaje)
+- Nombre: [CUSTOM] Envio mail venta automática
+- Modelo: Pedido de venta
+- Activador: El estado está establecido como Pedido de venta
+- Acciones pendientes > Añadir una acción > Tipo (Enviar correo electrónico) > Detalles de la acción (Plantilla de correo electrónico > Enviar correo electrónico como Mensaje)
 
-Creamos una venta, la confirmamos y debería de salir el mensaje automáticamente al confirmarlo.
+Creamos una venta, la confirmamos y debería de salir el mensaje (abajo) automáticamente al confirmarlo.
 
-## 6. Modulos personalizados de Odoo
+## 4.4 - Prácticas de las automatizaciones
 
-### 6.1 - Creación de los directorios y ficheros
+### 4.4.1 - Mail automático - Automátización de detección de venta que supere los 20.000€
 
-Los modulos se hacen en ``/home/user/TecnoFix/volumesOdoo/addons`` (en mi caso, todo depende de donde tengas todo lo de Odoo. 
+1. Tener instalado el modulo ``CRM``. Para hacerlo, hacemos lo siguiente: En el menú le damos a ``Aplicaciones`` > ``CRM`` > ``Activar``.
+2. Creación de la plantilla del correo
+    - Nombre: [CUSTOM] Oportunidad de venta > 20.000€
+    - Aplica a: Lead/Oportunidad
+    - Asunto: Oportunidad de venta > a 20.000€ en ``{{object.name}}``
+    - Cuerpo del correo:
+
+      ```
+      Se ha detectado una oportunidad de venta mayor a 20.000€ en la empresa "object.partner_id.name (Cliente → Nombre)":
+      - Nombre de la Oportunidad de venta: object.name (Oportunidad)
+      - Ingresos esperados: object.expected_revenue€ (Ingresoso esperados)
+      ```
+3. Creación de la regla:
+    - Nombre: [CUSTOM] Nueva oportunidad de venta > 20.000
+    - Modelo: Lead/Oportunidad
+    - Activador: ``Al guardar``
+    - Aplicar a: ``Ingresos esperados > 20.000 ``
+    - Acciones pendientes:
+        - Tipo: Enviar correo eléctronico
+        - Plantilla de correo eléctronico: [CUSTOM] Oportunidad de venta > 20.000€ (plantilla creada anteriormente)
+        - Enviar correo eléctronico como: ``Mensaje`` 
+
+### 4.4.2 - Regla Automátizada con scripts (opcional)
+
+Antes de nada
+
+Vamos a hacer un borrador de servicio para un pedido de un server.
+
+- Nombre: [CUSTOM] Borrador de servicio para pedido de un server
+- Modelo: Pedido de venta
+- Activador: El estado está establecido como: Pedido de venta
+- Aplicar a:
+    - Estado = Pedido de venta
+    - Líneas del pedido - no contiene - ``Servicio de Instalación y Configuración de Servidores``
+    - Líneas del pedido - no contiene - ``Servidor HP Enterprise 2000``
+  - Acciones pendientes: Ejecutar código > Detalles de la acción
+
+  ```py
+  # 1. Obtener el producto de servicio (Producto B)
+  # Se recomienda usar el ID, pero buscaremos por nombre para simplificar
+    product_service = env['product.product'].search([('name', '=', 'Servicio de Instalación y Configuración de Servidores')], limit=1)
+    
+    if product_service:
+        # 2. Crear el nuevo Pedido de Venta (Borrador)
+        # 'record' es la variable que representa el Pedido de Venta (sale.order) actual confirmado.
+        new_so = env['sale.order'].create({
+            'partner_id': record.partner_id.id,
+            'state': 'draft', # Lo creamos como borrador
+        })
+    
+        # 3. Crear la línea de pedido de servicio en el nuevo PV
+        env['sale.order.line'].create({
+            'order_id': new_so.id,
+            'product_id': product_service.id,
+            'name': product_service.display_name,
+            'product_uom_qty': 1.0,
+            'price_unit': product_service.list_price,
+        })
+  ```
+
+## 5. Modulos personalizados de Odoo
+
+### 5.1 - Crear los directorios y ficheros necesarios
+
+Los modulos se hacen en ``/home/$USER/tecnofix/volumesOdoo/addons`` (ten en cuenta que esta es la ruta donde lo tengo yo, pero depende donde tengas el ``volumesOdoo``).
 
 Sabiendo esto, creamos el primer modelo. Tenemos que crear un directorio dentro de ``addons``.
 
 ```bash
-/home/user/TecnoFix/volumesOdoo/addons/prueba
+/home/$USER/tecnofix/volumesOdoo/addons/prueba
 ```
 
 Ahora creamos los ficheros ``__init__.py`` y ``__manifest__.py`` y añadimos las siguientes lineas a ``__manifest__.py``:
@@ -343,7 +409,7 @@ Ahora creamos los ficheros ``__init__.py`` y ``__manifest__.py`` y añadimos las
 }
 ```
 
-### 6.2 - Conexión al contenedor y generación del modulo automático
+### 5.2 - Conexión al contenedor y generación del modulo automático
 
 Acceso al contenedor:
 
@@ -431,7 +497,7 @@ Personalizar el xml de vistas:
 </odoo>
 ```
 
-### 6.4 - Instalación del modulo personalizado en Odoo
+### 5.4 - Instalación del modulo personalizado en Odoo
 
 Para instalarlo debemos acceder a odoo desde la página:
 
@@ -440,7 +506,7 @@ Para instalarlo debemos acceder a odoo desde la página:
 3. Luego buscar el modulo que hemos personalizado borrando los filtros existentes y buscando por el nombre que le establecimos (Prueba)
 4. Activamos y listo ya podriamos ver Pruebas en la lista de modulos de odoo que esta a la izquierda
 
-### 6.5 - Prácticas
+### 5.5 - Prácticas
 
 **MÓDULO PARA TIENDA DE VIDEOJUEGOS - REQUISITOS:**
 
@@ -463,7 +529,7 @@ Para instalarlo debemos acceder a odoo desde la página:
             - Si no está marcado, el precio final es igual al precio_base.
             - Ademas he agregado un 21% al precio final
 
-#### 6.5.1 - Directorios y archivos para Modulos personalizados
+#### 5.5.1 - Directorios y archivos para Modulos personalizados
 
 Para empezar todos los modulos se hacen en `/home/user/docker/Odoo/volumesOdoo/addons`
 
