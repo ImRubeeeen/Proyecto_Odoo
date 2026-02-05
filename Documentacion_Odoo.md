@@ -352,55 +352,57 @@ Creamos una venta, la confirmamos y debería de salir el mensaje (abajo) automá
 
 ### 4.4.2 - Regla Automátizada con scripts (opcional)
 
-Antes de nada
+Vamos a hacer una regla de borrador de servicio para un pedido de un server y su instalación. Para eso tenemos que hacer lo siguiente:
 
-Vamos a hacer un borrador de servicio para un pedido de un server.
-
-- Nombre: [CUSTOM] Borrador de servicio para pedido de un server
-- Modelo: Pedido de venta
-- Activador: El estado está establecido como: Pedido de venta
-- Aplicar a:
-    - Estado = Pedido de venta
-    - Líneas del pedido - no contiene - ``Servicio de Instalación y Configuración de Servidores``
-    - Líneas del pedido - no contiene - ``Servidor HP Enterprise 2000``
-  - Acciones pendientes: Ejecutar código > Detalles de la acción
-
-  ```py
-  # 1. Obtener el producto de servicio (Producto B)
-  # Se recomienda usar el ID, pero buscaremos por nombre para simplificar
-    product_service = env['product.product'].search([('name', '=', 'Servicio de Instalación y Configuración de Servidores')], limit=1)
+1. Crear los siguientes 2 productos: `` Servidor HP Enterprise 2000`` y ``Servicio de Instalación y Configuración de Servidores``.
+2. Hacer la automatización.
+    - Nombre: [CUSTOM] Borrador de servicio para pedido de un server
+    - Modelo: Pedido de venta
+    - Activador: El estado está establecido como: Pedido de venta
+    - Aplicar a:
+        - Estado = Pedido de venta
+        - Líneas del pedido - no contiene - ``Servicio de Instalación y Configuración de Servidores``
+        - Líneas del pedido - no contiene - ``Servidor HP Enterprise 2000``
+    - Acciones pendientes: Ejecutar código > Detalles de la acción
     
-    if product_service:
-        # 2. Crear el nuevo Pedido de Venta (Borrador)
-        # 'record' es la variable que representa el Pedido de Venta (sale.order) actual confirmado.
-        new_so = env['sale.order'].create({
-            'partner_id': record.partner_id.id,
-            'state': 'draft', # Lo creamos como borrador
-        })
-    
-        # 3. Crear la línea de pedido de servicio en el nuevo PV
-        env['sale.order.line'].create({
-            'order_id': new_so.id,
-            'product_id': product_service.id,
-            'name': product_service.display_name,
-            'product_uom_qty': 1.0,
-            'price_unit': product_service.list_price,
-        })
-  ```
+      ```py
+      # 1. Obtener el producto de servicio (Producto B)
+      # Se recomienda usar el ID, pero buscaremos por nombre para simplificar
+        product_service = env['product.product'].search([('name', '=', 'Servicio de Instalación y Configuración de Servidores')], limit=1)
+        
+        if product_service:
+            # 2. Crear el nuevo Pedido de Venta (Borrador)
+            # 'record' es la variable que representa el Pedido de Venta (sale.order) actual confirmado.
+            new_so = env['sale.order'].create({
+                'partner_id': record.partner_id.id,
+                'state': 'draft', # Lo creamos como borrador
+            })
+        
+            # 3. Crear la línea de pedido de servicio en el nuevo PV
+            env['sale.order.line'].create({
+                'order_id': new_so.id,
+                'product_id': product_service.id,
+                'name': product_service.display_name,
+                'product_uom_qty': 1.0,
+                'price_unit': product_service.list_price,
+            })
+      ```
 
-## 5. Modulos personalizados de Odoo
+# 5. Modulos personalizados de Odoo
 
-### 5.1 - Crear los directorios y ficheros necesarios
+## 5.1 - Crear los directorios y ficheros necesarios
 
-Los modulos se hacen en ``/home/$USER/tecnofix/volumesOdoo/addons`` (ten en cuenta que esta es la ruta donde lo tengo yo, pero depende donde tengas el ``volumesOdoo``).
+**RECOMENDACIÓN:** Usar un IDE para la personalización.
 
-Sabiendo esto, creamos el primer modelo. Tenemos que crear un directorio dentro de ``addons``.
+Los modulos se hacen en ``/home/$USER/TecnoFix/volumesOdoo/addons`` (ten en cuenta que esta es la ruta donde lo tengo yo, pero depende donde tengas el ``volumesOdoo``).
+
+Una vez que sabemos esto, creamos el primer modelo. Tenemos que crear un directorio dentro de ``addons`` (directorio por cada modulo que quieras hacer).
 
 ```bash
-/home/$USER/tecnofix/volumesOdoo/addons/prueba
+/home/$USER/TecnoFix/volumesOdoo/addons/prueba
 ```
 
-Ahora creamos los ficheros ``__init__.py`` y ``__manifest__.py`` y añadimos las siguientes lineas a ``__manifest__.py``:
+Creamos los ficheros ``__init__.py`` y ``__manifest__.py`` y añadimos las siguientes lineas a ``__manifest__.py``:
 
 ```bash
 {
@@ -409,7 +411,7 @@ Ahora creamos los ficheros ``__init__.py`` y ``__manifest__.py`` y añadimos las
 }
 ```
 
-### 5.2 - Conexión al contenedor y generación del modulo automático
+## 5.2 - Conexión al contenedor y generación del modulo automático
 
 Acceso al contenedor:
 
@@ -423,9 +425,9 @@ Generación del modulo automático:
 odoo scaffold prueba /mnt/extra-addons
 ```
 
-### 6.3 - Configuración y personalización del modulo
+## 5.3 - Configuración y personalización del modulo
 
-Personalizar el .py de models:
+Personalizar el .py de models dentro de su mismo directorio:
 
 ```py
 # -*- coding: utf-8 -*-
@@ -451,7 +453,7 @@ class prueba(models.Model):
             registro.peso_total = registro.peso * 10
 ```
 
-Personalizar el xml de vistas:
+Personalización del .xml de vistas:
 
 ```xml
 <odoo>
@@ -497,18 +499,18 @@ Personalizar el xml de vistas:
 </odoo>
 ```
 
-### 5.4 - Instalación del modulo personalizado en Odoo
+## 5.4 - Instalación del modulo personalizado en Odoo
 
-Para instalarlo debemos acceder a odoo desde la página:
+Para instalarlo debemos acceder a Odoo desde la página y hacer lo siguiente:
 
 1. Ir a aplicaciones
 2. Pulsar ``Actualizar lista de aplicaciones``
-3. Luego buscar el modulo que hemos personalizado borrando los filtros existentes y buscando por el nombre que le establecimos (Prueba)
-4. Activamos y listo ya podriamos ver Pruebas en la lista de modulos de odoo que esta a la izquierda
+3. Luego buscar el modulo que hemos personalizado (borra los filtros que vienen puestos) y busca por el nombre que le establecimos al módulo, en mi caso ``Prueba``.
+4. Pulsamos en ``Activar`` y cuando abajo a la derecha no salga ``Cargando`` significa que ya se ha instalado. Se puede ver en la lista de modulos de Odoo que esta arriba a la izquierda.
 
-### 5.5 - Prácticas
+## 5.5 - Prácticas
 
-**MÓDULO PARA TIENDA DE VIDEOJUEGOS - REQUISITOS:**
+### 5.5.1 - TIENDA DE VIDEOJUEGOS - REQUISITOS
 
 1. Modelo
     - Nombre (Char): Título del juego.
@@ -529,13 +531,12 @@ Para instalarlo debemos acceder a odoo desde la página:
             - Si no está marcado, el precio final es igual al precio_base.
             - Ademas he agregado un 21% al precio final
 
-#### 5.5.1 - Directorios y archivos para Modulos personalizados
+### 5.5.2 - Directorios y archivos para Modulos personalizados
 
-Para empezar todos los modulos se hacen en `/home/user/docker/Odoo/volumesOdoo/addons`
+Crearemos el directorio del modelo ``tienda_videojuegos`` en su respectivo directorio que hemos indicado anteriormente.
 
-Ahora crearemos el directorio del Modelo "tienda_videojuegos"
 ```bash
-mkdir /home/user/TecnoFix/volumesOdoo/addons/tienda_videojuegos
+/home/$USER/TecnoFix/volumesOdoo/addons/tienda_videojuegos
 ```
 
 Luego creamos los ficheros `__init__.py` y `__manifest__.py` de los cuales agregaresmos lo siguiente a `__manifest__.py`
@@ -546,38 +547,23 @@ Luego creamos los ficheros `__init__.py` y `__manifest__.py` de los cuales agreg
 }
 ```
 
-##### Acceso al contenedor y creación de la plantilla del modulo
+### 5.5.3 - Acceso al contenedor y creación de la plantilla del modulo
 
 Accedemos al contenedor con lo siguiente:
+
 ```bash
 docker exec -it odoo-web bash
 ```
 Generamos la plantilla del modulo personalizado
+
 ```bash
 odoo scaffold tienda_videojuegos /mnt/extra-addons
 ```
 
-##### Configuración y personalización del modulo
+#### 5.5.4 Configuración y personalización del modulo
 
-Primero descomentamos la linea `security/ir.model.access.csv` del fichero `__manifest__.py` quedaria de la siguiente manera:
-```py
-    'data': [
-        'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
-    ],
-```
-Modificar el csv de seguridad
+Modificación del código de ``models/models.py``:
 
-**RUTA:** /addons/tienda_videojuegos/security/ir.model.access.csv
-```csv
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-tienda_videojuegos_acl,tienda_videojuegos,model_tienda_videojuegos_tienda_videojuegos,base.group_user,1,1,1,1
-```
-
-Personalizar el python de models
-
-**Ruta:** volumesOdoo/addons/tienda_videojuegos/models/models.py
 ```py
 # -*- coding: utf-8 -*-
 
@@ -590,7 +576,10 @@ class tienda_videojuegos(models.Model):
     _rec_name = 'nombre'
 
     nombre = fields.Char(string="Nombre del Juego", required=True)
-    consola = fields.Selection([('ps5','PS5'),('xbox','XBOX'),('switch','SWITCH'),('pc','PC')])
+    consola = fields.Selection([('ps5','PS5'),
+                                ('xbox','XBOX'),
+                                ('switch','SWITCH'),
+                                ('pc','PC')])
     precio_base = fields.Float()
     unidades = fields.Integer()
     estado = fields.Selection([('nuevo','Nuevo'),('usado','Segunda Mano')])
@@ -612,9 +601,9 @@ class tienda_videojuegos(models.Model):
                 record.precio_final = float(record.precio_base) * 1.21
 ```
 
-Personalizar el xml de vistas
-**RUTA:** volumesOdoo/addons/tienda_videojuegos/views/views.xml
-```xml
+Modificación del código de ``views/views.xml``:
+
+```py
 <odoo>
   <data>
     <!-- explicit list view definition -->
@@ -636,6 +625,8 @@ Personalizar el xml de vistas
       </field>
     </record>
 
+    <!-- actions opening views on models -->
+
     <record model="ir.actions.act_window" id="tienda_videojuegos_action_window">
       <field name="name">Tienda de videojuegos</field>
       <field name="res_model">tienda_videojuegos.tienda_videojuegos</field>
@@ -643,19 +634,58 @@ Personalizar el xml de vistas
     </record>
 
         <!-- Top menu item -->
-    <menuitem name="Gestión de videojuegos" id="tienda_videojuegos_menu"/>
+    <menuitem name="Tienda de videojuegos" id="tienda_videojuegos_menu"/>
 
     <!-- menu categories -->
     <menuitem name="Ver juegos" id="tienda_videojuegos_tienda_videojuegos" parent="tienda_videojuegos_menu"/>
 
     <!-- actions -->
-    <menuitem name="Listar juegos" id="tienda_videojuegos_listar_videojuegos" parent="tienda_videojuegos_tienda_videojuegos"
+    <menuitem name="Lista de juegos" id="tienda_videojuegos_listar_videojuegos" parent="tienda_videojuegos_tienda_videojuegos"
               action="tienda_videojuegos_action_window"/>
+
+  </data>
+</odoo>
 ```
 
-##### Instalación del modulo personalizado en Odoo
-Para instalarlo debemos acceder a [odoo](localhost:8069) desde la página 
-1. ir a aplicaciones 
-2. pulsar `Actualizar lista de aplicaciones` 
-3. luego buscar el modulo que hemos personalizado borrando los filtros existentes y buscando por el nombre que le establecimos (Tienda videojuegos) 
-4. activamos y listo ya podriamos ver Gestión de videojuegos en la lista de modulos de odoo que esta a la izquierda
+Modificación del código de ``__manifest__.py``.
+
+```py
+# -*- coding: utf-8 -*-
+{
+    'name': "Tienda videojuegos",
+
+    'summary': "Short (1 phrase/line) summary of the module's purpose",
+
+    'description': """
+Long description of module's purpose
+    """,
+
+    'author': "Tecnofix",
+    'website': "https://www.yourcompany.com",
+
+    # Categories can be used to filter modules in modules listing
+    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
+    # for the full list
+    'category': 'Uncategorized',
+    'version': '0.1',
+
+    # any module necessary for this one to work correctly
+    'depends': ['base'],
+
+    # always loaded
+    'data': [
+        'security/ir.model.access.csv',
+        'views/views.xml',
+        'views/templates.xml',
+    ],
+    # only loaded in demonstration mode
+    'demo': [
+        'demo/demo.xml',
+    ],
+}
+```
+> **SOLO** he descomentado en data la línea ``'security/ir.model.access.csv',``.
+
+### 5.5.5 - Activar módulo
+
+Cuando ya hemos modificado el código como queremos para nuestro módulo, vamos a Odoo, actualizamos los paquetes y lo activamos.
