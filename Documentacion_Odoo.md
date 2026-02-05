@@ -439,10 +439,10 @@ class prueba(models.Model):
     _description = 'Modelo para la fruta'
     _rec_name = 'nombre'            #Para que busque la nueva variable que sustituirá name
 
-    nombre = fields.Char()          #sera caractares
+    nombre = fields.Char()         
     tipo = fields.Selection([
-    ('tipo_hueso','Hueso'),
-    ('tipo_citrico','Citrico')
+            ('tipo_hueso','Hueso'),
+            ('tipo_citrico','Citrico')
     ], string = 'Tipo de fruta')    #Campo de selecciones con sus campos
     peso = fields.Integer(string='Peso')    #Peso como numero entero
     peso_total = fields.Integer(string='Peso Total',compute='_compute_peso_total') #Peso_total como un decimal ademas del uso de 'compute' para definir que sera modificada por una api
