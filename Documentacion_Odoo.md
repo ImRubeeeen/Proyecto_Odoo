@@ -258,7 +258,7 @@ services:
 - Para instalar/iniciar el docker-compose, usamos el siguiente comando: docker compose up -d (el -d se utiliza para que se quede en segundo plano)
 - Para detener el docker-compose se usa: docker compose down (se recomienda antes de apagar la máquina el docker compose)
 
-# 4. Personalización de plantillas de correo y su automatizaciones en Odoo
+# 4. Personalización de las plantillas de correos eléctronicos y sus automatizaciones en Odoo
 
 ## 4.1 - Activar modo desarrollador
 
