@@ -358,7 +358,7 @@ Vamos a hacer una regla de borrador de servicio para un pedido de un server y su
 2. Hacer la automatización.
     - Nombre: [CUSTOM] Borrador de servicio para pedido de un server
     - Modelo: Pedido de venta
-    - Activador: El estado está establecido como: Pedido de venta
+    - Activador: El estado está establecido como - Pedido de venta
     - Aplicar a:
         - Estado = Pedido de venta
         - Líneas del pedido - no contiene - ``Servicio de Instalación y Configuración de Servidores``
