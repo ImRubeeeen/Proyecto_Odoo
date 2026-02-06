@@ -388,9 +388,23 @@ Vamos a hacer una regla de borrador de servicio para un pedido de un server y su
             })
       ```
 
-# 5. Modulos personalizados de Odoo
+# 5. Configurar Sitio Web
 
-## 5.1 - Crear los directorios y ficheros necesarios
+Antes de empezar con la configuración, debemos instalar la aplicación de ``Sitio Web``. Cuando la instalamos ya podemos proceder con la configuración.
+
+Nos pedirá ajustes básicos, como el logo, elegir plantilla, etc. Al hacer eso, ya se puede modificarla como queramos.
+
+En el caso que queramos crear nuevas páginas, si queremos que se nos abra primero una web antes que otro podemos ponerla como la principal en ``Sitio Web → Configuración → Sitios web``.
+
+## 5.1 - Personalización web
+
+Para acceder a la página y empezar a modificarla, tenemos que ir al menú de arriba a la izquierda de las aplicaciones y darle clic a ``Sitio web``.
+
+Cuando accedemos a ella se puede modificar todo lo que quieras, incluso puedes cambiar el ``HTML`` y ``CSS``.
+
+# 6. Modulos personalizados de Odoo
+
+## 6.1 - Crear los directorios y ficheros necesarios
 
 **RECOMENDACIÓN:** Usar un IDE para la personalización.
 
@@ -411,7 +425,7 @@ Creamos los ficheros ``__init__.py`` y ``__manifest__.py`` y añadimos las sigui
 }
 ```
 
-## 5.2 - Conexión al contenedor y generación del modulo automático
+## 6.2 - Conexión al contenedor y generación del modulo automático
 
 Acceso al contenedor:
 
@@ -425,7 +439,7 @@ Generación del modulo automático:
 odoo scaffold prueba /mnt/extra-addons
 ```
 
-## 5.3 - Configuración y personalización del modulo
+## 6.3 - Configuración y personalización del modulo
 
 Personalizar el .py de models dentro de su mismo directorio:
 
@@ -499,7 +513,7 @@ Personalización del .xml de vistas:
 </odoo>
 ```
 
-## 5.4 - Instalación del modulo personalizado en Odoo
+## 6.4 - Instalación del modulo personalizado en Odoo
 
 Para instalarlo debemos acceder a Odoo desde la página y hacer lo siguiente:
 
@@ -508,9 +522,9 @@ Para instalarlo debemos acceder a Odoo desde la página y hacer lo siguiente:
 3. Luego buscar el modulo que hemos personalizado (borra los filtros que vienen puestos) y busca por el nombre que le establecimos al módulo, en mi caso ``Prueba``.
 4. Pulsamos en ``Activar`` y cuando abajo a la derecha no salga ``Cargando`` significa que ya se ha instalado. Se puede ver en la lista de modulos de Odoo que esta arriba a la izquierda.
 
-## 5.5 - Prácticas
+## 6.5 - Prácticas
 
-### 5.5.1 - TIENDA DE VIDEOJUEGOS - REQUISITOS
+### 6.5.1 - TIENDA DE VIDEOJUEGOS - REQUISITOS
 
 1. Modelo
     - Nombre (Char): Título del juego.
@@ -531,7 +545,7 @@ Para instalarlo debemos acceder a Odoo desde la página y hacer lo siguiente:
             - Si no está marcado, el precio final es igual al precio_base.
             - Ademas he agregado un 21% al precio final
 
-### 5.5.2 - Directorios y archivos para Modulos personalizados
+### 6.5.2 - Directorios y archivos para Modulos personalizados
 
 Crearemos el directorio del modelo ``tienda_videojuegos`` en su respectivo directorio que hemos indicado anteriormente.
 
@@ -547,7 +561,7 @@ Luego creamos los ficheros `__init__.py` y `__manifest__.py` de los cuales agreg
 }
 ```
 
-### 5.5.3 - Acceso al contenedor y creación de la plantilla del modulo
+### 6.5.3 - Acceso al contenedor y creación de la plantilla del modulo
 
 Accedemos al contenedor con lo siguiente:
 
@@ -560,7 +574,7 @@ Generamos la plantilla del modulo personalizado
 odoo scaffold tienda_videojuegos /mnt/extra-addons
 ```
 
-#### 5.5.4 Configuración y personalización del modulo
+#### 6.5.4 Configuración y personalización del modulo
 
 Modificación del código de ``models/models.py``:
 
@@ -686,6 +700,6 @@ Long description of module's purpose
 ```
 > **SOLO** he descomentado en data la línea ``'security/ir.model.access.csv',``.
 
-### 5.5.5 - Activar módulo
+### 6.5.5 - Activar módulo
 
 Cuando ya hemos modificado el código como queremos para nuestro módulo, vamos a Odoo, actualizamos los paquetes y lo activamos.
